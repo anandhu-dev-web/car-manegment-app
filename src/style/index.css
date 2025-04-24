@@ -8,6 +8,18 @@ body{
     background-color: #000000;
     color: #ffffff;
 }
+ /* Custom Scrollbar */
+::-webkit-scrollbar{
+    width: 5px;
+}
+
+::-webkit-scrollbar-track{
+    background-color:#000000;
+}
+
+::-webkit-scrollbar-thumb{
+    background-color: cyan;
+}
 .btn_cyan{
     font-weight: bold;
     background-color: cyan;
@@ -17,10 +29,10 @@ body{
     border-radius: 15px;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
-    &:hover{
+}
+.btn_cyan:hover {
     background-color: rgba(0, 255, 255, 0.536);
-        transition: all 0.3s ease-in-out;
-    }
+    transition: all 0.3s ease-in-out;
 }
 .btn_white{
     font-weight: bold;
@@ -31,8 +43,8 @@ body{
     border-radius: 15px;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
-    &:hover{
-        background-color: rgba(255, 255, 255, 0.536);
-        transition: all 0.3s ease-in-out;
-    }
+}
+.btn_white:hover {
+    background-color: rgba(255, 255, 255, 0.536);
+    transition: all 0.3s ease-in-out;
 }
