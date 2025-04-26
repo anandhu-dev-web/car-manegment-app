@@ -8,10 +8,13 @@ import OurCars from './pages/OurCars';
 import Contact from './pages/Contact';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import { ToastContainer } from 'react-toastify';
+import AddProduct from './pages/AddProducts';
 
 function App() {
   return (
     <Router>
+      <ToastContainer position='top-center' autoClose={2000}  />
     <Header />
     <Routes>
       <Route path="/" element={<Home />} />
@@ -20,6 +23,7 @@ function App() {
       <Route path="/contact" element={<Contact />} />
       <Route path="/login" element={<Login/>} />
       <Route path="/register" element={<Register/>} />
+      <Route path="/addproduct" element={<AddProduct/>} />
       </Routes>
     <Footer/>
     </Router>

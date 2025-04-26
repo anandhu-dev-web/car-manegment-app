@@ -1,98 +1,126 @@
-import React from "react";
-import { Button, Col, Form, Row, Container } from "react-bootstrap";
-import * as formik from "formik";
-import * as yup from "yup";
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Button, Col, Container, Form, InputGroup, Row } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { userLogin } from "../redux/authslice";
 
-function Login() {
-  const { Formik } = formik;
+const Login = () => {
+  const {users} = useSelector(state=>state.users) 
+  const [validated, setValidated] = useState(false);
+  const [email, setemail] = useState("");
+  const [password, setpassoword] = useState("");
+  const localStorageData = JSON.parse(localStorage.getItem("users"));
+  const navigator = useNavigate();
+  const dispatch = useDispatch()
+  
+  
+  const handleSubmit = (event) => {
+    const form = event.currentTarget;
+    event.preventDefault();
+    if (form.checkValidity() === false) {
+      event.stopPropagation();
+    } else {
+      const loginDetails = {
+        email,
+        password,
+      };
+      console.log(loginDetails);
+    const userid = users.find((usr)=>usr.email === loginDetails.email)
+      
+      const user = localStorageData.find((usr)=> usr.email === loginDetails.email)
+      console.log('USER--',user);
+      
 
-  const schema = yup.object().shape({
-    userName: yup.string().required("Username is required"),
-    password: yup.string().required("Password is required"),
-    terms: yup.bool().oneOf([true], "Terms must be accepted"),
-  });
+      if(!user){
+        return toast.error("No user found!")
+        
+      }
+      if(user.password !== loginDetails.password){
+        return toast.error("incorrect password!")
+      }
+
+      dispatch(userLogin({...loginDetails,role:'Admin',status:true,id:userid.id}))
+
+      toast.success("login sucess..")
+
+      navigator("/")
+
+    }
+
+    setValidated(true);
+  };
 
   return (
-    <Container className="my-5">
-      <Row className="justify-content-center">
-        <h3 className="text-center mb-4">User Login</h3>
-        <Col md={4} className="border border-2 rounded p-4 shadow-sm">
-          <Formik
-            validationSchema={schema}
-            onSubmit={(values) => {
-              console.log("Login values:", values);
-              // Add API call or logic here
-            }}
-            initialValues={{
-              userName: "",
-              password: "",
-              terms: false,
-            }}
-          >
-            {({ handleSubmit, handleChange, values, touched, errors }) => (
-              <Form noValidate onSubmit={handleSubmit}>
-                <Form.Group className="mb-3" controlId="validationFormik01">
-                  <Form.Label>User Name</Form.Label>
-                  <Form.Control
-                    required
-                    type="text"
-                    name="userName"
-                    value={values.userName}
-                    onChange={handleChange}
-                    isValid={touched.userName && !errors.userName}
-                    isInvalid={!!errors.userName}
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    {errors.userName}
-                  </Form.Control.Feedback>
+    <>
+      <Container>
+        <Row>
+          <Col className="text-center">
+            <h1>Login</h1>
+          </Col>
+        </Row>
+        <Row md={"3"} className="justify-content-center">
+          <Col>
+            <Form noValidate validated={validated} onSubmit={handleSubmit}>
+              <Row className="mb-3">
+                <Form.Group as={Col} controlId="validationCustomUsername">
+                  <Form.Label>Email</Form.Label>
+                  <InputGroup hasValidation>
+                    <InputGroup.Text id="inputGroupPrepend">@</InputGroup.Text>
+                    <Form.Control
+                      type="email"
+                      placeholder="Email"
+                      aria-describedby="inputGroupPrepend"
+                      required
+                      onChange={(event) => setemail(event.target.value)}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      Please enter a email.
+                    </Form.Control.Feedback>
+                    <Form.Control.Feedback>
+                      Email looks good.
+                    </Form.Control.Feedback>
+                  </InputGroup>
                 </Form.Group>
-
-                <Form.Group className="mb-3" controlId="validationFormik02">
+              </Row>
+              <Row className="mb-3">
+                <Form.Group
+                  as={Col}
+                  controlId="validationCustom03"
+                  className="position-relative"
+                >
                   <Form.Label>Password</Form.Label>
                   <Form.Control
-                    required
                     type="password"
-                    name="password"
-                    value={values.password}
-                    onChange={handleChange}
-                    isValid={touched.password && !errors.password}
-                    isInvalid={!!errors.password}
+                    placeholder="Password"
+                    required
+                    onChange={(event) => setpassoword(event.target.value)}
                   />
-                  <Form.Control.Feedback type="invalid">
-                    {errors.password}
+                  <Form.Control.Feedback type="invalid" tooltip>
+                    Please provide a password.
+                  </Form.Control.Feedback>
+                  <Form.Control.Feedback tooltip>
+                    Password Looks Good.
                   </Form.Control.Feedback>
                 </Form.Group>
-
-                <Form.Group className="mb-3" controlId="validationFormik03">
-                  <Form.Check
-                    required
-                    name="terms"
-                    label="Agree to terms and conditions"
-                    onChange={handleChange}
-                    isInvalid={!!errors.terms}
-                    feedback={errors.terms}
-                    feedbackType="invalid"
-                  />
-                </Form.Group>
-
-                <p className="text-center mt-4">
-                  Don't have an account?{" "}
-                  <Link to="/register" className="text-decoration-none">
+              </Row>
+              <Button className="w-100 mb-3 mt-3" type="submit">
+                Login
+              </Button>
+              <Row>
+                <Col className="text-center mb-3">
+                  If you don't have an account,
+                  <Link as="Link" to={"/Register"}>
                     Register here
                   </Link>
-                </p>
-
-                <Button type="submit" className="w-100">
-                  Login
-                </Button>
-              </Form>
-            )}
-          </Formik>
-        </Col>
-      </Row>
-    </Container>
+                </Col>
+              </Row>
+            </Form>
+          </Col>
+        </Row>
+      </Container>
+    </>
   );
-}
+};
 
 export default Login;

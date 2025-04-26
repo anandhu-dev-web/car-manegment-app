@@ -3,6 +3,7 @@ import { Container } from 'react-bootstrap';
 import '../style/Home.css';
 import OurCars from './OurCars';
 import About from './About';
+import Review from './Review';
 
 function Home() {
   return (
@@ -21,6 +22,7 @@ function Home() {
         </div>
         <OurCars/>
         <About/>
+        <Review/>
     </Container>
     </>
   )

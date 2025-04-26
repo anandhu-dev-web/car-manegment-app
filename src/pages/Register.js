@@ -4,12 +4,15 @@ import * as formik from "formik";
 import * as yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { userRegister } from "../redux/userSlice";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom"; 
 
 function Register() {
   const { Formik } = formik;
-  const{users}=useSelector((state)=>state.users)
+
+  const { users } = useSelector((state) => state.users);
   console.log(users);
-  
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const schema = yup.object().shape({
     fullName: yup.string().required("Full Name is required"),
@@ -23,19 +26,30 @@ function Register() {
     <Container className="my-5">
       <Row className="justify-content-center">
         <h3 className="text-center mb-4">User Register</h3>
-        <Col md={6} lg={4} className="border border-2 rounded p-4 shadow-sm m-3 m-md-0">
+        <Col
+          md={6}
+          lg={4}
+          className="border border-2 rounded p-4 shadow-sm m-3 m-md-0"
+        >
           <Formik
             validationSchema={schema}
             onSubmit={(values) => {
-              // console.log("Login values:", values);
-              dispatch(userRegister({...values, id: Date.now()}));
+              dispatch(
+                userRegister({
+                  ...values,
+                  role: "user",
+                  id: Date.now(),
+                  status: true,
+                })
+              );
+              toast.success("Register sucess...");
+              navigate("/Login");
             }}
             initialValues={{
               fullName: "",
-              userName: "",
               email: "",
               password: "",
-              terms: false,
+              phone: "",
             }}
           >
             {({ handleSubmit, handleChange, values, touched, errors }) => (
@@ -100,21 +114,9 @@ function Register() {
                     {errors.password}
                   </Form.Control.Feedback>
                 </Form.Group>
-              
-                <Form.Group className="mb-3" controlId="validationFormik05">
-                  <Form.Check
-                    required
-                    name="terms"
-                    label="Agree to terms and conditions"
-                    onChange={handleChange}
-                    isInvalid={!!errors.terms}
-                    feedback={errors.terms}
-                    feedbackType="invalid"
-                  />
-                </Form.Group>
 
                 <Button type="submit" className="w-100">
-                  Login
+                  Register
                 </Button>
               </Form>
             )}
