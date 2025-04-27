@@ -8,7 +8,7 @@ function About() {
     <>
     <Container>
       <Row className='about_wrapper p-5 fw-bold'>
-        <Col>
+        <Col lg={6}>
           <div className='about_text my-md-5'>
             <h1 className='fw-bold'>About Us</h1>
             <p>We are a leading car dealership with a passion for providing the best vehicles to our customers.</p>
@@ -18,7 +18,7 @@ function About() {
             <a href="/contact" className='btn btn_cyan m-2'>Contact Us</a>
           </div>
         </Col>
-        <Col className='about_image my-md-5'>
+        <Col lg={6} className='about_image my-md-5'>
         <Card className='bg-dark text-light'>
       <Card.Img variant="top" src={human} />
       <Card.Body>

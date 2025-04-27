@@ -53,9 +53,10 @@ function OurCars() {
       </Container>
       <section>
         <Container className="my-md-4 my-2">
-          <Row>
+          <Row className="my-md-5 my-3">
+            <h1 className="text-center fw-bold mb-md-5">Special Deals</h1>
           {products.map((car) => (
-            <Col md={4} key={car.id} className="mb-4">
+            <Col md={6} lg={4} key={car.id} className="mb-4">
               <CarCard car={car} />
             </Col>
           ))}

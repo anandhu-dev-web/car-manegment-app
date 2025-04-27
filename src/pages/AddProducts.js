@@ -3,21 +3,27 @@ import * as formik from 'formik';
 import * as yup from 'yup';
 import { useDispatch } from "react-redux";
 import { addProduct } from "../redux/productSlice";
+import { toast } from "react-toastify";
 
 function AddProduct() {
   const dispatch = useDispatch();
-
   const { Formik } = formik;
+
   const schema = yup.object().shape({
     carName: yup
       .string()
       .required('Car name is required')
       .min(3, 'Car name must be at least 3 characters'),
-
+    
     imageUrl: yup
       .string()
       .required('Image URL is required')
       .url('Please enter a valid URL'),
+
+    carPrice: yup
+      .number()
+      .required('Car price is required')
+      .min(1000, 'Car price should be at least 1000'),
 
     description: yup
       .string()
@@ -34,14 +40,16 @@ function AddProduct() {
     <Container>
       <Formik
         validationSchema={schema}
-        onSubmit={(values) => {
-          ;
-          dispatch(addProduct({...values, id: Date.now()}));
+        onSubmit={(values, { resetForm }) => {
+          dispatch(addProduct({ ...values, id: Date.now() }));
+          toast.success('Car added successfully!');
+          resetForm(); // 👈 Reset the form nicely after submission
         }}
         initialValues={{
           carName: '',
           imageUrl: '',
           description: '',
+          carPrice: '',
           terms: false,
         }}
       >
@@ -68,7 +76,24 @@ function AddProduct() {
                     </Form.Control.Feedback>
                   </Form.Group>
 
-                  <Form.Group as={Col} md="6" controlId="imageUrl">
+                  <Form.Group as={Col} md="6" controlId="carPrice">
+                    <Form.Label>Car Price</Form.Label>
+                    <Form.Control
+                      type="number"
+                      min="1000"
+                      name="carPrice"
+                      placeholder="Car Price"
+                      value={values.carPrice}
+                      onChange={handleChange}
+                      isInvalid={touched.carPrice && !!errors.carPrice}
+                      isValid={touched.carPrice && !errors.carPrice}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      {errors.carPrice}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+
+                  <Form.Group as={Col} md="12" controlId="imageUrl" className="mt-3">
                     <Form.Label>Image URL</Form.Label>
                     <InputGroup hasValidation>
                       <InputGroup.Text>URL</InputGroup.Text>
@@ -118,7 +143,11 @@ function AddProduct() {
                   />
                 </Form.Group>
 
-                <Button type="submit" className="w-100" disabled={!(isValid && dirty)}>
+                <Button
+                  type="submit"
+                  className="w-100 btn btn-primary"
+                  disabled={!(isValid && dirty)}
+                >
                   Submit Form
                 </Button>
               </Col>
