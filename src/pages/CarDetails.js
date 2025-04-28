@@ -1,10 +1,22 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';  // Import useLocation
 import { Container, Row, Col } from 'react-bootstrap';
+import { toast } from 'react-toastify';
+import { useDispatch } from "react-redux";
+import { addToCart } from "../redux/cartSlice";
 
 function CarDetails() {
   const location = useLocation();  // Use useLocation to get state
   const { car } = location.state || {};  // Extract car from state
+
+  const dispatch = useDispatch(); 
+  const handleAddToCart = () => {
+      dispatch(addToCart(car)); 
+      toast.success(`${car.carName} added to cart!`, {
+        position: "top-center",
+        autoClose: 2000,
+      });
+    };
 
   if (!car) {
     return (
@@ -35,8 +47,18 @@ function CarDetails() {
           <h2 className="fw-bold my-3">Price:  $  {car.carPrice}</h2>
           </div>
           <div >
-            <a href="/contact" className="btn btn_cyan m-2 w-100">Book Now</a>
-            <a href="/" className="btn btn_white m-2 w-100">Add to Cart</a>
+            <button className="btn btn_cyan w-100 m-1" onClick={()=>toast.success("Booking confirmed!")}>
+                              Book Now
+                            </button>
+                            <button
+              className="btn btn_white w-100 m-1 "
+              onClick={(e) => {
+                e.stopPropagation();
+                handleAddToCart(); 
+              }}
+            >
+              Add to Cart
+            </button>
           </div>
         </Col>
       </Row>

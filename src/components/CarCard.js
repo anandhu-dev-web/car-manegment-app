@@ -3,12 +3,23 @@ import { Card } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import "../style/Card.css";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../redux/cartSlice";
+import { toast } from "react-toastify";
+
 
 function CarCard({ car }) {
-
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  
+  const handleAddToCart = () => {
+    dispatch(addToCart(car)); 
+    toast.success(`${car.carName} added to cart!`, {
+      position: "top-center",
+      autoClose: 2000,
+    });
+  };
+
   function truncateText(text, maxLength = 120) {
     if (!text) return '';
     if (text.length <= maxLength) return text;
@@ -43,16 +54,23 @@ function CarCard({ car }) {
           <Card.Text>
             {truncateText(car.description)}
           </Card.Text>
-          <Card.Text className=" fw-bold">
-            $ { car.carPrice?.toLocaleString() || "Price Unavailable"}
+          <Card.Text className="fw-bold">
+            $ {car.carPrice?.toLocaleString() || "Price Unavailable"}
           </Card.Text>
           <div className="mt-3">
-            <a href="/contact" className="btn btn_cyan m-1">
-              Book Now
-            </a>
-            <a href="/contact" className="btn btn_white m-1">
+            
+          <button className="btn btn_cyan me-2" onClick={()=>toast.success("Booking confirmed!")}>
+                  Book Now
+                </button>
+            <button
+              className="btn btn_white m-1"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleAddToCart(); 
+              }}
+            >
               Add to Cart
-            </a>
+            </button>
           </div>
         </Card.Body>
       </Card>

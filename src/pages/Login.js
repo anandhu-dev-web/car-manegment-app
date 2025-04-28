@@ -40,7 +40,7 @@ const Login = () => {
         return toast.error("incorrect password!")
       }
 
-      dispatch(userLogin({...loginDetails,role:'Admin',status:true,id:userid.id}))
+      dispatch(userLogin({...loginDetails,role:user.role,status:true,id:userid.id}))
 
       toast.success("login sucess..")
 

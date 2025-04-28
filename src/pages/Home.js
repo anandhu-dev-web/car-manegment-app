@@ -1,9 +1,7 @@
 import React from 'react';
 import { Container } from 'react-bootstrap';
 import '../style/Home.css';
-import OurCars from './OurCars';
 import About from './About';
-import Review from './Review';
 
 function Home() {
   return (
@@ -20,9 +18,7 @@ function Home() {
         <a href="/contact" className='btn btn_white m-2'>Contact Us</a>
         </div>
         </div>
-        <OurCars/>
         <About/>
-        <Review/>
     </Container>
     </>
   )

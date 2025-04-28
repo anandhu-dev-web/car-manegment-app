@@ -12,7 +12,7 @@ import { userLogout } from '../redux/authslice';
 
 function Header() {
   const dispatch = useDispatch();
-  const {isLogged} = useSelector(state=>state.auth)
+  const {isLogged,user} = useSelector(state=>state.auth)
   const handleLogOut = () => {
     dispatch(userLogout())
     console.log('Logout clicked');
@@ -29,7 +29,8 @@ function Header() {
             <Nav.Link as={Link} to="/ourcars">OUR CARS</Nav.Link>
             <Nav.Link as={Link} to="/about">ABOUT</Nav.Link>
             <Nav.Link as={Link} to="/contact">CONTACT</Nav.Link>
-            <Nav.Link as={Link} to="/" className='position-relative cart_icon'><FaCartFlatbed /><span className='bg-danger rounded-5 px-1'>0</span></Nav.Link>
+               {user?.role === "Admin" && (<Nav.Link as={Link} to="/addproduct">ADD CAR</Nav.Link>)}
+            <Nav.Link as={Link} to="/cart" className='cart_icon'><FaCartFlatbed /></Nav.Link>
             <Nav.Link as={Link} to="/login">
             {isLogged ? <IoIosLogOut onClick={handleLogOut} /> : <FaRegUser />}
             </Nav.Link>
